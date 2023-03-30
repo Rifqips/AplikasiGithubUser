@@ -17,6 +17,7 @@ import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityHomeBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
+import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.MainViewModel
 
 class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
@@ -34,6 +35,10 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
 
         setupMainViewModel()
         setupRecyclerView()
+
+        _binding!!.favoriteView.setOnClickListener {
+            startActivity(Intent(this, FavoriteActivity::class.java))
+        }
     }
 
     override fun onDestroy() {
