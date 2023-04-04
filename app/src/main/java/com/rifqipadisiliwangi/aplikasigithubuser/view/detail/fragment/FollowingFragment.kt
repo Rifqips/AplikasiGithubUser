@@ -2,16 +2,14 @@ package com.rifqipadisiliwangi.aplikasigithubuser.view.detail.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.FragmentFollowersBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
-import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.detail.FollowViewModel

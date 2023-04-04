@@ -1,10 +1,8 @@
 package com.rifqipadisiliwangi.aplikasigithubuser.view.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -14,13 +12,13 @@ import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityUserDetailB
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 import com.rifqipadisiliwangi.aplikasigithubuser.model.UserDetail
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DaoGithubUser
-import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DatabaseGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.uitls.loadImage
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.FollowPagerAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.detail.DetailViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+
 class UserDetailActivity : AppCompatActivity() {
     private var _binding: ActivityUserDetailBinding? = null
     private val binding get() = _binding!!
@@ -43,8 +41,6 @@ class UserDetailActivity : AppCompatActivity() {
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
         user.login?.let { setupViewModel(it) }
 
-
-
         setupViewPager()
         favoriteSetUp()
     }
@@ -58,7 +54,7 @@ class UserDetailActivity : AppCompatActivity() {
                     val company = tvDetailCompany.text.toString()
                     val location = tvDetailLocation.text.toString()
 
-                    databaseGithubUser!!.FavoritGithubDao().addFavorite(DataGithubUser(userName,typeUser,sUrl,company,location))
+                    databaseGithubUser!!.FavoritGithubDao().addFavorite(User(0,userName,typeUser,sUrl))
                 }
             }
 

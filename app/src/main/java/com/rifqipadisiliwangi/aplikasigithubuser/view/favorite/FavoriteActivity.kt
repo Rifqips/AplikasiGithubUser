@@ -1,15 +1,14 @@
 package com.rifqipadisiliwangi.aplikasigithubuser.view.favorite
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityFavoriteBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
-import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DatabaseGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.FavoriteAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
@@ -37,7 +36,7 @@ class FavoriteActivity : AppCompatActivity(), FavoriteAdapter.UserCallback {
         viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
         viewModel.getAllHistoryObserve().observe(this) {
             if(it != null){
-                adapterFavorite.setFavorite(it as ArrayList<DataGithubUser>)
+                adapterFavorite.setFavorite(it as ArrayList<User>)
             }
         }
         historyVm()
@@ -60,7 +59,7 @@ class FavoriteActivity : AppCompatActivity(), FavoriteAdapter.UserCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onUserClick(user: DataGithubUser) {
+    override fun onUserClick(user: User) {
         val userDetailIntent = Intent(this, UserDetailActivity::class.java)
         userDetailIntent.putExtra(UserDetailActivity.EXTRA_USER, user)
         startActivity(userDetailIntent)

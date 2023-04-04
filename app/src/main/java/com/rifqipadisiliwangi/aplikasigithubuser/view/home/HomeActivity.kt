@@ -29,7 +29,6 @@ import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.MainViewModel
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ThemeViewModel
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ViewModelFactory
 
-
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {

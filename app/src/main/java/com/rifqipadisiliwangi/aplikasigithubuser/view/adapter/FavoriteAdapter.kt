@@ -4,13 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ItemFavoriteBinding
-import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ItemUserBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DaoGithubUser
-import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DatabaseGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.uitls.loadImage
 import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
@@ -20,32 +17,32 @@ import kotlinx.coroutines.async
 class FavoriteAdapter(private val callback: UserCallback)
     :RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
 
-    private val mData = ArrayList<DataGithubUser>()
+    private val mData = ArrayList<User>()
 
     private lateinit var context : Context
     var githubDatabase: DatabaseGithubUser? = null
     private lateinit var daoGithub : DaoGithubUser
-    private var githubData : List<DataGithubUser> = emptyList()
+    private var githubData : List<User> = emptyList()
     private var database: DatabaseGithubUser? = null
 
-    fun setFavorite(list: List<DataGithubUser>){
+    fun setFavorite(list: List<User>){
         mData.clear()
         mData.addAll(list)
         notifyDataSetChanged()
     }
 
     interface UserCallback {
-        fun onUserClick(user: DataGithubUser)
+        fun onUserClick(user: User)
     }
 
     inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: DataGithubUser) {
+        fun bind(user: User) {
             with(binding) {
                 tvName.text = user.login
                 tvUsername.text = user.type
-                tvCompany.text = user.company
-                tvLocation.text = user.location
+//                tvCompany.text = user.company
+//                tvLocation.text = user.location
                 ivUser.loadImage(user.avatarUrl)
                 root.setOnClickListener { callback.onUserClick(user) }
                 delete.setOnClickListener {

@@ -4,19 +4,20 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 
 @Dao
 interface DaoGithubUser {
 
     @Insert
-    fun addFavorite(DataGithubUser: DataGithubUser):Long
+    fun addFavorite(DataGithubUser: User):Long
 
-    @Query("SELECT * FROM DataGithubUser")
-    fun getFavorite() : List<DataGithubUser>
+    @Query("SELECT * FROM User")
+    fun getFavorite() : List<User>
 
-    @Query("SELECT count(*) FROM DataGithubUser WHERE DataGithubUser.login = :login")
+    @Query("SELECT count(*) FROM User WHERE User.login = :login")
     fun checkFavorite(login: Int) : Int
 
     @Delete
-    fun deleteFavorite(DataGithubUser: DataGithubUser) : Int
+    fun deleteFavorite(DataGithubUser: User) : Int
 }
