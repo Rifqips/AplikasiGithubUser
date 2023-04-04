@@ -11,7 +11,7 @@ data class UserDetail(
     @SerializedName("type")
     val type: String? = null,
     @SerializedName("avatar_url")
-    val avatarUrl: String? = null,
+    var avatarUrl: String? = null,
     @SerializedName("followers")
     val followers: Int? = null,
     @SerializedName("following")

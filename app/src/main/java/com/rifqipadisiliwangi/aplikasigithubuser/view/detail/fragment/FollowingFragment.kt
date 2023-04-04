@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.FragmentFollowersBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
+import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
-import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.FollowViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.detail.FollowViewModel
 
 class FollowingFragment : Fragment(),
     UserAdapter.UserCallback {

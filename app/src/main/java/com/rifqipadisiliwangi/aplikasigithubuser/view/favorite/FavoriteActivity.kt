@@ -1,26 +1,29 @@
 package com.rifqipadisiliwangi.aplikasigithubuser.view.favorite
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Database
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityFavoriteBinding
-import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityUserDetailBinding
+import com.rifqipadisiliwangi.aplikasigithubuser.model.User
+import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DatabaseGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.FavoriteAdapter
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.favorite.FavoriteViewModel
 
-class FavoriteActivity : AppCompatActivity() {
+class FavoriteActivity : AppCompatActivity(), FavoriteAdapter.UserCallback {
 
     private var _binding: ActivityFavoriteBinding? = null
     private val binding get() = _binding!!
 
 
-    private var databaseFavorite : DatabaseGithubUser? = null
-    private val adapter : FavoriteAdapter = FavoriteAdapter()
+    private var favoriteDB : DatabaseGithubUser? = null
+    private lateinit var viewModel: FavoriteViewModel
+    var adapterFavorite = FavoriteAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +32,22 @@ class FavoriteActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.user_favorite)
         supportActionBar?.elevation = 0f
+        favoriteDB = DatabaseGithubUser.getInstance(this)
 
+        viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
+        viewModel.getAllHistoryObserve().observe(this) {
+            if(it != null){
+                adapterFavorite.setFavorite(it as ArrayList<DataGithubUser>)
+            }
+        }
+        historyVm()
 
-        databaseFavorite = DatabaseGithubUser.getInstance(this)
-        binding.rvFavorite.adapter = adapter
-        binding.rvFavorite.layoutManager = LinearLayoutManager(this,
-            LinearLayoutManager.VERTICAL,false)
-        getFavorite()
+    }
 
+    fun historyVm(){
+        adapterFavorite = FavoriteAdapter(this)
+        binding.rvFavorite.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvFavorite.adapter = adapterFavorite
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -49,15 +60,11 @@ class FavoriteActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getFavorite(){
-        GlobalScope.launch {
-            val listFavorite = databaseFavorite?.FavoritGithubDao()?.getFavorite()
-            runOnUiThread {
-                listFavorite.let {
-                    adapter.setFavorite(it!!)
-                }
-            }
-        }
-
+    override fun onUserClick(user: DataGithubUser) {
+        val userDetailIntent = Intent(this, UserDetailActivity::class.java)
+        userDetailIntent.putExtra(UserDetailActivity.EXTRA_USER, user)
+        startActivity(userDetailIntent)
     }
+
+
 }

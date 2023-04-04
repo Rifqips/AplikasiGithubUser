@@ -13,7 +13,7 @@ import com.rifqipadisiliwangi.aplikasigithubuser.databinding.FragmentFollowersBi
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
-import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.FollowViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.detail.FollowViewModel
 
 class FollowersFragment : Fragment(),
     UserAdapter.UserCallback {

@@ -6,12 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 
-
-@Database(entities = [DataGithubUser::class], version = 2)
+@Database(entities = [DataGithubUser::class], version = 12)
 abstract class DatabaseGithubUser: RoomDatabase() {
 
     abstract fun FavoritGithubDao() : DaoGithubUser
-
 
     companion object{
         private var INSTANCE : DatabaseGithubUser? = null

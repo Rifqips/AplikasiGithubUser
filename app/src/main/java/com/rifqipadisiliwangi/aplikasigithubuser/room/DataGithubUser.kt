@@ -11,22 +11,18 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DataGithubUser (
     @PrimaryKey
+    @SerializedName("login")
     val login: String,
-    @ColumnInfo(name = "name")
-    val name: String,
     @ColumnInfo(name = "type")
-    val type: String,
-    @ColumnInfo(name = "avatarUrl")
-    val avatarUrl: String,
-    @ColumnInfo(name = "followers")
-    val followers: Int,
-    @ColumnInfo(name = "following")
-    val following: Int,
+    val type: String?,
+    @SerializedName("avatar_url")
+    @ColumnInfo(name = "avatar_url")
+    val avatarUrl: String?,
     @ColumnInfo(name = "company")
-    val company: String,
+    val company: String?,
     @ColumnInfo(name = "location")
-    val location: String,
+    val location: String?,
     @ColumnInfo(name = "publicRepos")
-    val publicRepos: String
+    val publicRepos: String? = null
 ): Parcelable
 

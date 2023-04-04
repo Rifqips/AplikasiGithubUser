@@ -1,20 +1,26 @@
 package com.rifqipadisiliwangi.aplikasigithubuser.view.adapter
 
-import android.content.ClipData.Item
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ItemFavoriteBinding
-import com.rifqipadisiliwangi.aplikasigithubuser.model.Constant
+import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ItemUserBinding
+import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DaoGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DataGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DatabaseGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.uitls.loadImage
-import com.squareup.picasso.Picasso
+import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
-class FavoriteAdapter():RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
+class FavoriteAdapter(private val callback: UserCallback)
+    :RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
+
+    private val mData = ArrayList<DataGithubUser>()
 
     private lateinit var context : Context
     var githubDatabase: DatabaseGithubUser? = null
@@ -22,41 +28,57 @@ class FavoriteAdapter():RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
     private var githubData : List<DataGithubUser> = emptyList()
     private var database: DatabaseGithubUser? = null
 
-    class ViewHolder(val binding : ItemFavoriteBinding): RecyclerView.ViewHolder(binding.root) {
-        val view = binding
+    fun setFavorite(list: List<DataGithubUser>){
+        mData.clear()
+        mData.addAll(list)
+        notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.ViewHolder {
-        val view = ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context),parent, false)
+    interface UserCallback {
+        fun onUserClick(user: DataGithubUser)
+    }
+
+    inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: DataGithubUser) {
+            with(binding) {
+                tvName.text = user.login
+                tvUsername.text = user.type
+                tvCompany.text = user.company
+                tvLocation.text = user.location
+                ivUser.loadImage(user.avatarUrl)
+                root.setOnClickListener { callback.onUserClick(user) }
+                delete.setOnClickListener {
+                    githubDatabase = DatabaseGithubUser.getInstance(it.context)
+                    GlobalScope.async {
+                        githubDatabase?.FavoritGithubDao()?.deleteFavorite(githubData[position])
+                        (itemView.context as FavoriteActivity).run {
+                            Toast.makeText(it.context, "Data Berhasil Dihapus", Toast.LENGTH_SHORT)
+                                .show()
+                            (itemView.context as FavoriteActivity).apply {
+                                githubDatabase
+                            }
+                        }
+                    }
+                    Toast.makeText(it.context, "Data Gagal Dihapus", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.FavoriteViewHolder {
+        val view =
+            ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context),parent, false)
         database = DatabaseGithubUser.getInstance(parent.context)
         if (database != null){
             daoGithub = database!!.FavoritGithubDao()
         }
-        return ViewHolder(view)
+        return FavoriteViewHolder(view)
     }
 
-    fun setFavorite(list: List<DataGithubUser>){
-        this.githubData = list
-        notifyDataSetChanged()
+    override fun onBindViewHolder(holder: FavoriteAdapter.FavoriteViewHolder, position: Int) {
+        holder.bind(mData[position])
     }
 
-    override fun onBindViewHolder(holder: FavoriteAdapter.ViewHolder, position: Int) {
-        holder.binding.tvUsername.text = githubData[position].login
-        holder.binding.tvName.text = githubData[position].name
-
-        val pict = githubData[position]
-        Picasso.get()
-            .load(Constant.POSTER_PATH + pict.avatarUrl)
-            .placeholder(R.drawable.avatar_placeholder)
-            .fit().centerCrop()
-            .into(holder.view.ivUser)
-//        holder.binding.tvFollowing.text = githubData[position].following
-//        holder.binding.tvFollower.text = githubData[position].followers
-        holder.binding.tvCompany.text = githubData[position].company
-        holder.binding.tvLocation.text = githubData[position].location
-    }
-
-    override fun getItemCount(): Int {
-        return githubData.size
-    }
+    override fun getItemCount(): Int = mData.size
 }

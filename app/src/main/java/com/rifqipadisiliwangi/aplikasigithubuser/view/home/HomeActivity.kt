@@ -8,17 +8,29 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.CompoundButton
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityHomeBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
+import com.rifqipadisiliwangi.aplikasigithubuser.uitls.preferences.DataStorePreferences
+import com.rifqipadisiliwangi.aplikasigithubuser.uitls.preferences.SettingPreferences
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
-import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.MainViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.MainViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ThemeViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ViewModelFactory
+
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
     private var _binding: ActivityHomeBinding? = null
@@ -39,6 +51,38 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
         _binding!!.favoriteView.setOnClickListener {
             startActivity(Intent(this, FavoriteActivity::class.java))
         }
+
+        binding.switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.switchTheme.isChecked = true
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.switchTheme.isChecked = false
+            }
+        }
+
+
+
+
+        val pref = DataStorePreferences.getInstance(dataStore)
+        val prefsViewMdel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            ThemeViewModel::class.java
+        )
+
+        prefsViewMdel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.switchTheme.isChecked = true
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.switchTheme.isChecked = false
+            }
+        }
+
+        binding.switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+            prefsViewMdel.saveThemeSetting(isChecked)
+        }
     }
 
     override fun onDestroy() {
@@ -56,6 +100,7 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
 
     private fun showStartSearch(state: Boolean) {
         binding.imgStart.visibility = if (state) View.VISIBLE else View.GONE
+        binding.switchTheme.visibility = if (state) View.VISIBLE else View.GONE
         binding.tvStart.visibility = if (state) View.VISIBLE else View.GONE
     }
 
