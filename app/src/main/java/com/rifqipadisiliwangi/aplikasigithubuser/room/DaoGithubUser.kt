@@ -12,7 +12,7 @@ interface DaoGithubUser {
     @Insert
     fun addFavorite(DataGithubUser: User):Long
 
-    @Query("SELECT * FROM User")
+    @Query("SELECT * FROM User ORDER BY id DESC")
     fun getFavorite() : List<User>
 
     @Query("SELECT count(*) FROM User WHERE User.login = :login")

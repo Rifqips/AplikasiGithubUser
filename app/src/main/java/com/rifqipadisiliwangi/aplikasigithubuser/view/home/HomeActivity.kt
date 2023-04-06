@@ -6,10 +6,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.CompoundButton
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.datastore.core.DataStore
@@ -20,14 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityHomeBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
-import com.rifqipadisiliwangi.aplikasigithubuser.uitls.preferences.DataStorePreferences
-import com.rifqipadisiliwangi.aplikasigithubuser.uitls.preferences.SettingPreferences
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
+import com.rifqipadisiliwangi.aplikasigithubuser.view.setting.SettingActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.MainViewModel
-import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ThemeViewModel
-import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ViewModelFactory
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -37,6 +33,7 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
     private val userAdapter = UserAdapter(this)
     private lateinit var mainViewModel: MainViewModel
     private lateinit var searchView: SearchView
+    private lateinit var settingView: View
     private var extraSearch: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,41 +44,9 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
         setupMainViewModel()
         setupRecyclerView()
 
-        _binding!!.favoriteView.setOnClickListener {
-            startActivity(Intent(this, FavoriteActivity::class.java))
-        }
-
-        binding.switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                binding.switchTheme.isChecked = true
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                binding.switchTheme.isChecked = false
-            }
-        }
 
 
 
-
-        val pref = DataStorePreferences.getInstance(dataStore)
-        val prefsViewMdel = ViewModelProvider(this, ViewModelFactory(pref)).get(
-            ThemeViewModel::class.java
-        )
-
-        prefsViewMdel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
-            if (isDarkModeActive) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                binding.switchTheme.isChecked = true
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                binding.switchTheme.isChecked = false
-            }
-        }
-
-        binding.switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            prefsViewMdel.saveThemeSetting(isChecked)
-        }
     }
 
     override fun onDestroy() {
@@ -99,7 +64,6 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
 
     private fun showStartSearch(state: Boolean) {
         binding.imgStart.visibility = if (state) View.VISIBLE else View.GONE
-        binding.switchTheme.visibility = if (state) View.VISIBLE else View.GONE
         binding.tvStart.visibility = if (state) View.VISIBLE else View.GONE
     }
 
@@ -135,7 +99,6 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.main_menu, menu)
-
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu.findItem(R.id.menu_search).actionView as SearchView
 
@@ -168,6 +131,21 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.menu_setting -> {
+            startActivity(Intent(this@HomeActivity, SettingActivity::class.java))
+            true
+        }
+        R.id.menu_favorite -> {
+            startActivity(Intent(this@HomeActivity, FavoriteActivity::class.java))
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+
     private fun closeKeyboard() {
         val view: View? = this.currentFocus
         if (view != null) {
@@ -182,4 +160,5 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
         userDetailIntent.putExtra(UserDetailActivity.EXTRA_USER, user)
         startActivity(userDetailIntent)
     }
+
 }

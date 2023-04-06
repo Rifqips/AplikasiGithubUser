@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
 
-@Database(entities = [User::class], version = 14)
+@Database(entities = [User::class], version = 16)
 abstract class DatabaseGithubUser: RoomDatabase() {
 
     abstract fun FavoritGithubDao() : DaoGithubUser

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivitySplashBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.view.home.HomeActivity
 
@@ -20,10 +19,6 @@ class SplashActivity : AppCompatActivity() {
             finish()
         }, 3000)
         setContentView(binding.root)
-//        supportActionBar?.elevation = 0f
-//        supportActionBar?.setDisplayUseLogoEnabled(false);
-//        supportActionBar?.setDisplayShowHomeEnabled(false);
-//        supportActionBar?.setDisplayHomeAsUpEnabled(false);
         supportActionBar?.hide()
     }
 }

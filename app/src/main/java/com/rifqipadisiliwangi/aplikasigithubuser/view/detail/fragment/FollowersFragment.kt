@@ -15,6 +15,8 @@ import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.detail.FollowViewModel
 
+
+
 class FollowersFragment : Fragment(),
     UserAdapter.UserCallback {
     private var _binding: FragmentFollowersBinding? = null

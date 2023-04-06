@@ -3,8 +3,11 @@ package com.rifqipadisiliwangi.aplikasigithubuser.view.detail
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rifqipadisiliwangi.aplikasigithubuser.R
@@ -38,11 +41,14 @@ class UserDetailActivity : AppCompatActivity() {
         databaseGithubUser = DatabaseGithubUser.getInstance(this)
         githubDao = databaseGithubUser?.FavoritGithubDao()
 
+
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
         user.login?.let { setupViewModel(it) }
 
         setupViewPager()
         favoriteSetUp()
+
+
     }
 
     private fun favoriteSetUp(){
@@ -51,10 +57,20 @@ class UserDetailActivity : AppCompatActivity() {
                 GlobalScope.async {
                     val userName = tvDetailUsername.text.toString()
                     val typeUser = tvDetailName.text.toString()
-                    val company = tvDetailCompany.text.toString()
-                    val location = tvDetailLocation.text.toString()
 
-                    databaseGithubUser!!.FavoritGithubDao().addFavorite(User(0,userName,typeUser,sUrl))
+                    val dataFav = databaseGithubUser!!.FavoritGithubDao().addFavorite(User(0,userName,typeUser,sUrl))
+                    runOnUiThread {
+                        if (dataFav != 0.toLong()){
+                            Toast.makeText(this@UserDetailActivity, "Berhasil Menambah Ke Favorite", Toast.LENGTH_SHORT).show()
+                            var _isChecked = false
+                            _isChecked = !_isChecked
+                            binding.btnFavorite.isInvisible = true
+                            binding.btnFavoriteInvis.isVisible = true
+
+                        }else{
+                            Toast.makeText(this@UserDetailActivity, "Gagal Menambah Ke Favorite", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
 

@@ -14,6 +14,7 @@ import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.FavoriteAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.favorite.FavoriteViewModel
 
+
 class FavoriteActivity : AppCompatActivity(), FavoriteAdapter.UserCallback {
 
     private var _binding: ActivityFavoriteBinding? = null
@@ -64,6 +65,13 @@ class FavoriteActivity : AppCompatActivity(), FavoriteAdapter.UserCallback {
         userDetailIntent.putExtra(UserDetailActivity.EXTRA_USER, user)
         startActivity(userDetailIntent)
     }
-
+    fun getAllFavorite(){
+        var data = favoriteDB?.FavoritGithubDao()?.deleteFavorite(User(0,"","",""))
+        run {
+                adapterFavorite = FavoriteAdapter(this@FavoriteActivity)
+                binding.rvFavorite.layoutManager = LinearLayoutManager(this@FavoriteActivity, LinearLayoutManager.HORIZONTAL, false)
+                binding.rvFavorite.adapter = adapterFavorite
+        }
+    }
 
 }

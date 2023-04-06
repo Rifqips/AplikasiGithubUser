@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AplikasiGithubUser</string>
     <string name="user_detail">User Detail</string>
+    <string name="user_setting">Setting Tema</string>
     <string name="user_favorite">User Favorite</string>
     <string name="app_logo">Logo Aplikasi</string>
     <string name="app_avatar">Gambar Avatar</string>
@@ -12,6 +13,8 @@
     <string name="app_location">Location</string>
     <string name="app_repository">Repository</string>
     <string name="search">Search</string>
+    <string name="setting">Setting</string>
+    <string name="favorite">Favorite</string>
     <string name="tab">Tab</string>
     <string name="tv_start">Cari User Terlebih Dahulu</string>
     <string name="img_start">Image start searching first</string>
@@ -23,4 +26,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favorite_user">Favorite User</string>
+
+    <string name="title">Hapus</string>
+    <string name="dialogMsg">Kamu yakin ingin Hapus ? </string>
+
 </resources>
