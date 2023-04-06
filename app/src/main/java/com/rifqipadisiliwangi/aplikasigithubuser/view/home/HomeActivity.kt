@@ -25,8 +25,6 @@ import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.view.setting.SettingActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.MainViewModel
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding!!
@@ -43,8 +41,6 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
 
         setupMainViewModel()
         setupRecyclerView()
-
-
 
 
     }
