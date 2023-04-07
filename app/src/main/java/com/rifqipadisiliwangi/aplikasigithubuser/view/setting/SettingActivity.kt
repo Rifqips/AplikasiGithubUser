@@ -28,8 +28,6 @@ class SettingActivity : AppCompatActivity() {
         _binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         binding.switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -39,8 +37,6 @@ class SettingActivity : AppCompatActivity() {
                 binding.switchTheme.isChecked = false
             }
         }
-
-
 
 
         val pref = DataStorePreferences.getInstance(dataStore)

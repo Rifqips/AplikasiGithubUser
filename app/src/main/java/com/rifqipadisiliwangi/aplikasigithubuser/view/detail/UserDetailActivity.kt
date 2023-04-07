@@ -1,13 +1,18 @@
 package com.rifqipadisiliwangi.aplikasigithubuser.view.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rifqipadisiliwangi.aplikasigithubuser.R
@@ -17,11 +22,16 @@ import com.rifqipadisiliwangi.aplikasigithubuser.model.UserDetail
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DaoGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.room.DatabaseGithubUser
 import com.rifqipadisiliwangi.aplikasigithubuser.uitls.loadImage
+import com.rifqipadisiliwangi.aplikasigithubuser.uitls.preferences.DataStorePreferences
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.FollowPagerAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.detail.DetailViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ThemeViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ViewModelFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class UserDetailActivity : AppCompatActivity() {
     private var _binding: ActivityUserDetailBinding? = null
     private val binding get() = _binding!!
@@ -41,6 +51,17 @@ class UserDetailActivity : AppCompatActivity() {
         databaseGithubUser = DatabaseGithubUser.getInstance(this)
         githubDao = databaseGithubUser?.FavoritGithubDao()
 
+        val pref = DataStorePreferences.getInstance(dataStore)
+        val prefsViewMdel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            ThemeViewModel::class.java
+        )
+        prefsViewMdel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
         user.login?.let { setupViewModel(it) }

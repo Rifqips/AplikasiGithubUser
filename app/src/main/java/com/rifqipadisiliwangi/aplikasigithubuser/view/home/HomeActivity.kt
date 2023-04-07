@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.datastore.core.DataStore
@@ -19,12 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ActivityHomeBinding
 import com.rifqipadisiliwangi.aplikasigithubuser.model.User
+import com.rifqipadisiliwangi.aplikasigithubuser.uitls.preferences.DataStorePreferences
 import com.rifqipadisiliwangi.aplikasigithubuser.view.adapter.UserAdapter
 import com.rifqipadisiliwangi.aplikasigithubuser.view.detail.UserDetailActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.view.favorite.FavoriteActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.view.setting.SettingActivity
 import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.MainViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ThemeViewModel
+import com.rifqipadisiliwangi.aplikasigithubuser.viewmodel.home.ViewModelFactory
 
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding!!
@@ -38,6 +44,18 @@ class HomeActivity : AppCompatActivity(), UserAdapter.UserCallback {
         super.onCreate(savedInstanceState)
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val pref = DataStorePreferences.getInstance(dataStore)
+        val prefsViewMdel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            ThemeViewModel::class.java
+        )
+        prefsViewMdel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
         setupMainViewModel()
         setupRecyclerView()
