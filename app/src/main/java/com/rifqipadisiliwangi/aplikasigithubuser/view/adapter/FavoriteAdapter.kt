@@ -2,10 +2,13 @@ package com.rifqipadisiliwangi.aplikasigithubuser.view.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.RecyclerView
 import com.rifqipadisiliwangi.aplikasigithubuser.R
 import com.rifqipadisiliwangi.aplikasigithubuser.databinding.ItemFavoriteBinding
@@ -52,14 +55,17 @@ class FavoriteAdapter(private val callback: UserCallback)
                     callback.onUserClick(user)}
 
                 delete.setOnClickListener {
+
                     githubDatabase = DatabaseGithubUser.getInstance(it.context)
                     val builder = AlertDialog.Builder(it.context)
                     builder.setTitle(R.string.title)
                     builder.setMessage(R.string.dialogMsg)
-                    builder.setNegativeButton("Cancel"){dialogInterface, which ->
-                        Toast.makeText(context,"Cancel", Toast.LENGTH_LONG).show()
+                    builder.setNegativeButton("Cancel"){ dialogInterface : DialogInterface, which ->
+                        builder.setOnDismissListener {
+                            Toast.makeText(context,"Cancel", Toast.LENGTH_LONG).show()
+                        }
                     }
-                    builder.setPositiveButton("Yes"){dialogInterface, which->
+                    builder.setPositiveButton("Yes"){ _: DialogInterface, _: Int->
                         run {
                             GlobalScope.async {
                                 val del = githubDatabase?.FavoritGithubDao()?.deleteFavorite(user)
@@ -73,12 +79,16 @@ class FavoriteAdapter(private val callback: UserCallback)
                         it.context.startActivity(intent)
                     }
                     val alertDialog: AlertDialog = builder.create()
-                    alertDialog.setCancelable(false)
+                    alertDialog.setCancelable(true)
                     alertDialog.show()
+
+
                 }
             }
         }
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.FavoriteViewHolder {
         val view =

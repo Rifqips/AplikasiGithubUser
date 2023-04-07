@@ -29,5 +29,6 @@
 
     <string name="title">Hapus</string>
     <string name="dialogMsg">Kamu yakin ingin Hapus ? </string>
+    <string name="anda_yakin_ingin_menghapus">Anda Yakin Ingin Menghapus ?</string>
 
 </resources>
